@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/lib/i18n/context'
 import { ThemeCustomProvider } from '@/lib/theme-custom'
+import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
 const spaceGrotesk = Space_Grotesk({
@@ -51,6 +52,7 @@ export default function RootLayout({
           </ThemeCustomProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
+        <Toaster />
       </body>
     </html>
   )

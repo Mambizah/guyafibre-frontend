@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { useAuthStore } from "@/lib/stores/auth.store"
 import { ThemeCustomProvider } from "@/lib/theme-custom"
+import { Toaster } from "@/components/ui/sonner"
 import {
   LayoutDashboard,
   FileText,
@@ -338,6 +339,7 @@ export default function AdminLayout({
           </ThemeCustomProvider>
         </main>
       </div>
+      <Toaster />
     </div>
   )
 }
