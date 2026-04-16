@@ -34,9 +34,16 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
   new: { label: "Nouveau", variant: "default" },
   pending: { label: "En attente", variant: "secondary" },
   "in-progress": { label: "En cours", variant: "outline" },
+  in_progress: { label: "En cours", variant: "outline" },
   completed: { label: "Terminé", variant: "secondary" },
   accepted: { label: "Accepté", variant: "default" },
   rejected: { label: "Refusé", variant: "destructive" },
+  NEW: { label: "Nouveau", variant: "default" },
+  PENDING: { label: "En attente", variant: "secondary" },
+  IN_PROGRESS: { label: "En cours", variant: "outline" },
+  COMPLETED: { label: "Terminé", variant: "secondary" },
+  ACCEPTED: { label: "Accepté", variant: "default" },
+  REJECTED: { label: "Refusé", variant: "destructive" },
 }
 
 function formatDate(dateString: string): string {
@@ -244,8 +251,8 @@ const recentQuotes = data?.recentDevis.map(devis => ({
                   </div>
                   <div className="text-right">
                     <p className="font-semibold text-foreground">{quote.amount}</p>
-                    <Badge variant={statusConfig[quote.status].variant} className="mt-1">
-                      {statusConfig[quote.status].label}
+                    <Badge variant={statusConfig[quote.status]?.variant || "secondary"} className="mt-1">
+                      {statusConfig[quote.status]?.label || quote.status}
                     </Badge>
                   </div>
                   <DropdownMenu>

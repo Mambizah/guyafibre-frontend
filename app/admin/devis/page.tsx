@@ -69,9 +69,19 @@ const statusConfig: Record<string, { label: string; icon: typeof Clock; color: s
   new: { label: "Nouveau", icon: AlertCircle, color: "bg-blue-500", textColor: "text-blue-500" },
   pending: { label: "En attente", icon: Clock, color: "bg-amber-500", textColor: "text-amber-500" },
   "in-progress": { label: "En cours", icon: Clock, color: "bg-violet-500", textColor: "text-violet-500" },
+  in_progress: { label: "En cours", icon: Clock, color: "bg-violet-500", textColor: "text-violet-500" },
   completed: { label: "Terminé", icon: CheckCircle2, color: "bg-emerald-500", textColor: "text-emerald-500" },
   accepted: { label: "Accepté", icon: CheckCircle2, color: "bg-emerald-500", textColor: "text-emerald-500" },
   rejected: { label: "Refusé", icon: XCircle, color: "bg-red-500", textColor: "text-red-500" },
+  // Uppercase variants from backend
+  NEW: { label: "Nouveau", icon: AlertCircle, color: "bg-blue-500", textColor: "text-blue-500" },
+  PENDING: { label: "En attente", icon: Clock, color: "bg-amber-500", textColor: "text-amber-500" },
+  IN_PROGRESS: { label: "En cours", icon: Clock, color: "bg-violet-500", textColor: "text-violet-500" },
+  COMPLETED: { label: "Terminé", icon: CheckCircle2, color: "bg-emerald-500", textColor: "text-emerald-500" },
+  ACCEPTED: { label: "Accepté", icon: CheckCircle2, color: "bg-emerald-500", textColor: "text-emerald-500" },
+  REJECTED: { label: "Refusé", icon: XCircle, color: "bg-red-500", textColor: "text-red-500" },
+  QUOTE_SENT: { label: "Devis envoyé", icon: FileText, color: "bg-cyan-500", textColor: "text-cyan-500" },
+  CANCELLED: { label: "Annulé", icon: XCircle, color: "bg-gray-500", textColor: "text-gray-500" },
 }
 
 function formatDate(dateString: string): string {
