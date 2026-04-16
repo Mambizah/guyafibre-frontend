@@ -127,7 +127,7 @@ export default function AdminDevisPage() {
     const matchesSearch = 
       quote.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       quote.reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quote.service.toLowerCase().includes(searchTerm.toLowerCase())
+      (quote.services || []).join(' ').toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === "all" || quote.status === statusFilter
     return matchesSearch && matchesStatus
   })
