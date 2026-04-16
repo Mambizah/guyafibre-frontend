@@ -136,17 +136,17 @@ const recentQuotes = data?.recentDevis.map(devis => ({
     id: devis.reference,
     client: devis.clientName,
     company: devis.company,
-    service: devis.service,
+    service: Array.isArray(devis.services) ? devis.services.join(', ') : (devis.services as any)?.service || '',
     location: devis.location,
     date: formatDate(devis.createdAt),
     status: devis.status,
-    amount: formatAmount(devis.estimatedAmount),
+    amount: formatAmount((devis as any).estimatedAmount || 0),
   })) || []
 
   const topServices = data?.topServices.map(s => ({
-    name: s.serviceName,
+    name: s.serviceName || s.name,
     count: s.count,
-    percentage: s.percentage,
+    percentage: s.percentage || 0,
   })) || []
 
   return (

@@ -18,6 +18,12 @@ export interface DashboardStats {
     user: string | null
     createdAt: string
   }[]
+  // Aliases for frontend
+  totalDevisThisMonth?: number
+  pendingDevis?: number
+  activeClients?: number
+  monthlyRevenue?: number
+  monthlyChange?: number
 }
 
 export interface RecentDevis {
@@ -78,8 +84,18 @@ export const getDashboardData = async (): Promise<DashboardData> => {
     getRecentDevis(5),
     getTopServices(),
   ])
+
+  // Map backend response to frontend expected format
+  const mappedStats = {
+    ...stats,
+    totalDevisThisMonth: stats.devisThisMonth,
+    pendingDevis: stats.devisPending,
+    activeClients: stats.devisPending + stats.devisInProgress, // Approximation
+    monthlyRevenue: stats.revenueEstimated,
+    monthlyChange: stats.devisChange,
+  }
   return { 
-    stats, 
+    stats: mappedStats, 
     recentDevis, 
     topServices,
     upcomingInterventions: [
