@@ -40,11 +40,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await authApi.login(credentials);
-      const { accessToken, user } = response;
+      const { accessToken, refreshToken, user } = response;
       
-      // Save token to localStorage
+      // Save tokens to localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
       }
       
       set({
@@ -71,6 +72,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } finally {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
       }
       set({
         user: null,

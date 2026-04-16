@@ -36,9 +36,14 @@ api.interceptors.response.use(
 
       try {
         // Try to refresh token
+        const storedRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
+        if (!storedRefreshToken) {
+          throw new Error('No refresh token available');
+        }
+
         const response = await axios.post(
           `${API_URL}/api/auth/refresh`,
-          {},
+          { refreshToken: storedRefreshToken },
           { withCredentials: true }
         );
 
@@ -58,6 +63,7 @@ api.interceptors.response.use(
         // Refresh failed, logout
         if (typeof window !== 'undefined') {
           localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
           window.location.href = '/admin/login';
         }
         return Promise.reject(refreshError);

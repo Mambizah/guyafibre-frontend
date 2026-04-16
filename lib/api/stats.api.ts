@@ -1,14 +1,23 @@
 import api from "./axios"
 
 export interface DashboardStats {
-  totalDevis: number
-  totalDevisThisMonth: number
-  pendingDevis: number
-  completedDevis: number
-  activeClients: number
-  totalRevenue: number
-  monthlyRevenue: number
-  monthlyChange: number
+  devisThisMonth: number
+  devisLastMonth: number
+  devisChange: number
+  devisPending: number
+  devisInProgress: number
+  revenueEstimated: number
+  conversionRate: number
+  topServices: { name: string; count: number }[]
+  devisByStatus: Record<string, number>
+  recentActivity: {
+    id: string
+    action: string
+    entity: string
+    description: string
+    user: string | null
+    createdAt: string
+  }[]
 }
 
 export interface RecentDevis {
