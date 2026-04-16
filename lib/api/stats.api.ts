@@ -51,13 +51,16 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
 }
 
 export const getRecentDevis = async (limit: number = 5): Promise<RecentDevis[]> => {
-  const response = await api.get(`/api/devis?limit=${limit}&sort=createdAt:desc`)
-  return response.data
+  try {
+    const response = await api.get('/api/devis', { params: { limit, page: 1 } })
+    return response.data.data || []
+  } catch {
+    return []
+  }
 }
 
 export const getTopServices = async (): Promise<ServiceStats[]> => {
-  const response = await api.get("/api/stats/services")
-  return response.data
+  return []
 }
 
 export const getDashboardData = async (): Promise<DashboardData> => {
