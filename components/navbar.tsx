@@ -9,18 +9,13 @@ import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { useLanguage } from '@/lib/i18n/context'
-import { useTheme } from 'next-themes'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { t } = useLanguage()
-  const { resolvedTheme } = useTheme()
-
-  useEffect(() => setMounted(true), [])
 
   const navLinks = [
     { href: '/', label: t('nav.home') },
@@ -51,16 +46,6 @@ export function Navbar() {
     setMobileOpen(false)
   }, [pathname])
 
-  // Logo src: utilise la version claire sur fond sombre, sombre sur fond clair
-  const logoSrc = mounted && resolvedTheme === 'dark'
-    ? '/images/logo-white.png'
-    : '/images/logo.jpg'
-
-  // Fallback: si pas de logo-white, on applique un filtre CSS intelligent
-  const logoClass = mounted && resolvedTheme === 'dark'
-    ? 'object-contain brightness-0 invert'
-    : 'object-contain'
-
   return (
     <header
       className={cn(
@@ -74,17 +59,12 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <div className="relative w-32 h-10 md:w-40 md:h-12">
-            {/* Logo adaptatif: filtre invert en dark pour garantir la visibilité */}
+            {/* Logo - always visible, no filter needed since logo has dark text on light bg */}
             <Image
               src="/images/logo.jpg"
               alt="GUYA FIBRE"
               fill
-              className={cn(
-                'object-contain transition-all duration-300',
-                mounted && resolvedTheme === 'dark'
-                  ? 'brightness-0 invert'
-                  : ''
-              )}
+              className="object-contain"
               priority
             />
           </div>
