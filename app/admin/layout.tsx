@@ -111,13 +111,13 @@ export default function AdminLayout({
   const router = useRouter()
 
   // All hooks must be called before any conditional return
-  const { isAuthenticated, logout, user } = useAuthStore()
+  const { isAuthenticated, isInitialized, logout, user } = useAuthStore()
   
   useEffect(() => {
-    if (!isAuthenticated && pathname !== "/admin/login") {
+    if (isInitialized && !isAuthenticated && pathname !== "/admin/login") {
       router.push("/admin/login")
     }
-  }, [isAuthenticated, pathname, router])
+  }, [isAuthenticated, isInitialized, pathname, router])
 
   // Don't show admin layout on login page
   if (pathname === "/admin/login") {

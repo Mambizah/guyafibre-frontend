@@ -105,9 +105,10 @@ export default function AdminMediasPage() {
       const params: any = {}
       if (filterFolder !== "all") params.folder = filterFolder
       const response = await mediasApi.findAll(params)
-      setMedias(response.data || response)
+      setMedias(Array.isArray(response?.data) ? response.data : Array.isArray(response) ? response : [])
     } catch (error) {
       toast.error("Erreur lors du chargement des médias")
+      setMedias([])
     } finally {
       setIsLoading(false)
     }

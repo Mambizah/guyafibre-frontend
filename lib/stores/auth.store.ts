@@ -18,6 +18,7 @@ interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
   
   // Actions
@@ -34,6 +35,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
   isAuthenticated: false,
   isLoading: false,
+  isInitialized: false,
   error: null,
 
   login: async (credentials: LoginRequest) => {
@@ -123,12 +125,14 @@ if (typeof window !== 'undefined') {
     // Fetch user info
     authApi.me()
       .then((user) => {
-        useAuthStore.setState({ user });
+        useAuthStore.setState({ user, isInitialized: true });
       })
       .catch(() => {
         // Token invalid, clear it
         localStorage.removeItem('accessToken');
-        useAuthStore.setState({ accessToken: null, isAuthenticated: false });
+        useAuthStore.setState({ accessToken: null, isAuthenticated: false, isInitialized: true });
       });
+  } else {
+    useAuthStore.setState({ isInitialized: true });
   }
 }
