@@ -49,6 +49,7 @@
 .dark {
   --background: oklch(0.11 0.025 250);
   --foreground: oklch(0.98 0 0);
+  /* CORRECTION: card ne doit pas être blanc en dark mode */
   --card: oklch(0.16 0.025 250);
   --card-foreground: oklch(0.98 0 0);
   --popover: oklch(0.16 0.025 250);
@@ -66,7 +67,6 @@
   --border: oklch(0.23 0.025 250);
   --input: oklch(0.23 0.025 250);
   --ring: var(--brand-cyan);
-  --card: oklch(0.16 0.025 250);
 }
 
 @theme inline {
@@ -120,6 +120,34 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+  }
+
+  /* CORRECTION: Empêcher les fonds blancs/opaques non désirés en dark mode */
+  .dark section,
+  .dark div[class*="bg-white"],
+  .dark div[class*="bg-gray-50"],
+  .dark div[class*="bg-slate-50"] {
+    background-color: inherit;
+  }
+
+  /* CORRECTION: sections avec bg explicite blanc → transparent en dark */
+  .dark .bg-white {
+    background-color: var(--card) !important;
+  }
+  .dark .bg-gray-50,
+  .dark .bg-slate-50,
+  .dark .bg-zinc-50,
+  .dark .bg-neutral-50 {
+    background-color: var(--muted) !important;
+  }
+
+  /* CORRECTION: opacité blanche sur overlay */
+  .dark [style*="background: white"],
+  .dark [style*="background:#fff"],
+  .dark [style*="background: #fff"],
+  .dark [style*="background-color: white"],
+  .dark [style*="background-color:#fff"] {
+    background-color: var(--card) !important;
   }
 }
 

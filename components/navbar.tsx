@@ -9,13 +9,18 @@ import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { useLanguage } from '@/lib/i18n/context'
+import { useTheme } from 'next-themes'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { t } = useLanguage()
+  const { resolvedTheme } = useTheme()
+
+  useEffect(() => setMounted(true), [])
 
   const navLinks = [
     { href: '/', label: t('nav.home') },
@@ -46,24 +51,40 @@ export function Navbar() {
     setMobileOpen(false)
   }, [pathname])
 
+  // Logo src: utilise la version claire sur fond sombre, sombre sur fond clair
+  const logoSrc = mounted && resolvedTheme === 'dark'
+    ? '/images/logo-white.png'
+    : '/images/logo.jpg'
+
+  // Fallback: si pas de logo-white, on applique un filtre CSS intelligent
+  const logoClass = mounted && resolvedTheme === 'dark'
+    ? 'object-contain brightness-0 invert'
+    : 'object-contain'
+
   return (
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled
-          ? 'bg-card/95 backdrop-blur-md shadow-lg'
-          : 'bg-card/50 backdrop-blur-sm'
+          ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border'
+          : 'bg-background/80 backdrop-blur-sm'
       )}
     >
       <div className="container-wide flex items-center justify-between h-16 md:h-20 px-4 md:px-8 lg:px-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <div className="relative w-32 h-10 md:w-40 md:h-12">
+            {/* Logo adaptatif: filtre invert en dark pour garantir la visibilité */}
             <Image
               src="/images/logo.jpg"
               alt="GUYA FIBRE"
               fill
-              className="object-contain dark:brightness-150"
+              className={cn(
+                'object-contain transition-all duration-300',
+                mounted && resolvedTheme === 'dark'
+                  ? 'brightness-0 invert'
+                  : ''
+              )}
               priority
             />
           </div>
@@ -122,7 +143,7 @@ export function Navbar() {
             href="/devis"
             className="px-5 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:bg-primary/90 transition-all hover:scale-105 active:scale-95"
           >
-            {t('nav.quote')}
+            Prise de contact
           </Link>
         </div>
 
@@ -138,7 +159,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-card border-t border-border">
+        <div className="lg:hidden bg-background border-t border-border">
           <nav className="flex flex-col px-4 py-4 space-y-2">
             {navLinks.map((link) =>
               link.children ? (
@@ -184,7 +205,7 @@ export function Navbar() {
               href="/devis"
               className="w-full py-3 bg-primary text-primary-foreground text-sm font-semibold rounded-lg text-center hover:bg-primary/90 transition-colors"
             >
-              {t('nav.quote')}
+              Prise de contact
             </Link>
           </div>
         </div>

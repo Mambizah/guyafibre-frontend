@@ -44,7 +44,7 @@ const sidebarLinks = [
     icon: LayoutDashboard,
   },
   {
-    title: "Demandes de devis",
+    title: "Prises de contact",
     href: "/admin/devis",
     icon: FileText,
     badge: 12,

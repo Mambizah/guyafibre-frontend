@@ -179,10 +179,10 @@ export default function DevisPage() {
                   </div>
                 </div>
                 <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  Demande envoyée avec succès !
+                  Prise de contact envoyée avec succès !
                 </h1>
                 <p className="text-muted-foreground mb-8 leading-relaxed max-w-md mx-auto">
-                  Merci pour votre demande de devis. Notre équipe va l&apos;analyser et vous 
+                  Merci pour votre prise de contact. Notre équipe va l&apos;analyser et vous 
                   recontactera dans les plus brefs délais. Un récapitulatif a été envoyé 
                   à votre adresse email.
                 </p>
@@ -233,13 +233,13 @@ export default function DevisPage() {
             <div className="max-w-3xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-6 animate-pulse-glow">
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-primary text-sm font-medium">Demande de devis gratuit</span>
+                <span className="text-primary text-sm font-medium">Demande de prise de contact</span>
               </div>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
-                Obtenez votre devis personnalisé
+                Prenez contact avec notre équipe
               </h1>
               <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl mx-auto">
-                Remplissez le formulaire ci-dessous et recevez une estimation détaillée 
+                Remplissez le formulaire ci-dessous et notre équipe vous recontactera 
                 sous 24 à 48 heures. Notre équipe d&apos;experts analysera votre projet.
               </p>
             </div>
@@ -682,7 +682,7 @@ export default function DevisPage() {
                     </h3>
                     <ul className="space-y-3">
                       {[
-                        { icon: Shield, text: "Devis gratuit et sans engagement" },
+                        { icon: Shield, text: "Prise de contact gratuite" },
                         { icon: Clock, text: "Réponse garantie sous 24-48h" },
                         { icon: Award, text: "Expertise locale depuis 2018" },
                         { icon: CheckCircle2, text: "Techniciens certifiés FTTH" },

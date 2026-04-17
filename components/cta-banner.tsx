@@ -27,14 +27,14 @@ export function CTABanner() {
           <span className="text-primary">fiable et performant</span> ?
         </h2>
         <p className="text-white/60 text-lg mb-10 max-w-xl mx-auto text-pretty">
-          Nos experts vous proposent une solution adaptée à votre terrain et votre budget. Devis gratuit et sans engagement.
+          Nos experts vous proposent une solution adaptée à votre terrain et votre budget. Prise de contact gratuite.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/devis"
             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all duration-200 hover:shadow-lg hover:shadow-primary/30"
           >
-            Demander un devis gratuit
+            Demander une prise de contact
             <ArrowRight className="w-5 h-5" />
           </Link>
           <a

@@ -1,5 +1,5 @@
-// PDF Generator utility for quotes
-// This generates a professional PDF quote document
+// PDF Generator utility for quotes - Version améliorée
+// Génère un PDF professionnel avec tableau structuré et logo
 
 export interface QuoteData {
   id: string
@@ -54,14 +54,18 @@ export function generateQuotePDF(quoteData: QuoteData): string {
   const validUntil = new Date(quoteData.date)
   validUntil.setDate(validUntil.getDate() + quoteData.validityDays)
 
-  // Generate HTML that will be converted to PDF
   const html = `
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Devis ${quoteData.id} - GUYA FIBRE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prise de contact ${quoteData.id} - GUYA FIBRE</title>
   <style>
+    @page {
+      size: A4;
+      margin: 15mm 15mm 20mm 15mm;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -69,229 +73,443 @@ export function generateQuotePDF(quoteData: QuoteData): string {
     }
     body {
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 11px;
+      line-height: 1.6;
       color: #1a1a2e;
-      padding: 40px;
+      background: #fff;
     }
+
+    /* ─── HEADER ─── */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #00c4b0;
+      padding: 0 0 20px 0;
+      margin-bottom: 24px;
+      border-bottom: 3px solid #00c4b0;
     }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .logo-text {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
       color: #00c4b0;
     }
-    .logo span {
+    .logo-text span {
       color: #1a1a2e;
+    }
+    .logo-tagline {
+      font-size: 9px;
+      color: #888;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
     .company-info {
       text-align: right;
+      font-size: 9.5px;
+      color: #555;
+      line-height: 1.8;
+    }
+    .company-info strong {
       font-size: 11px;
-      color: #666;
+      color: #1a1a2e;
+      display: block;
+      margin-bottom: 2px;
     }
-    .quote-title {
-      background: linear-gradient(135deg, #00c4b0 0%, #009e8e 100%);
+
+    /* ─── TITRE DOCUMENT ─── */
+    .doc-title-bar {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0d2d44 100%);
       color: white;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 8px;
-    }
-    .quote-title h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-    .quote-meta {
+      padding: 16px 20px;
+      border-radius: 6px;
+      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
-      opacity: 0.9;
+      align-items: center;
     }
-    .parties {
-      display: flex;
-      gap: 40px;
-      margin-bottom: 30px;
+    .doc-title-bar h1 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
     }
-    .party {
-      flex: 1;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 8px;
+    .doc-title-bar .doc-accent {
+      color: #00c4b0;
     }
-    .party h3 {
-      font-size: 11px;
+    .doc-meta {
+      text-align: right;
+      font-size: 9.5px;
+      line-height: 1.8;
+      opacity: 0.85;
+    }
+    .doc-meta .date-label {
+      font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #00c4b0;
-      margin-bottom: 10px;
     }
-    .party p {
-      margin-bottom: 5px;
+
+    /* ─── PARTIES ─── */
+    .parties-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
     }
-    .party strong {
-      font-size: 14px;
+    .party-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
     }
-    table {
+    .party-box-header {
+      background: #f8fafc;
+      padding: 8px 14px;
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #00c4b0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .party-box-body {
+      padding: 12px 14px;
+      line-height: 1.9;
+    }
+    .party-box-body strong {
+      font-size: 12px;
+      color: #1a1a2e;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .party-box-body .info-row {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+    }
+    .party-box-body .info-label {
+      color: #888;
+      min-width: 40px;
+      font-size: 9px;
+    }
+
+    /* ─── TABLEAU SERVICES ─── */
+    .table-section {
+      margin-bottom: 24px;
+    }
+    .table-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+      padding-left: 4px;
+      border-left: 3px solid #00c4b0;
+      padding-left: 10px;
+    }
+    table.services-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 30px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
     }
-    th {
+    table.services-table thead tr {
       background: #1a1a2e;
       color: white;
-      padding: 12px;
+    }
+    table.services-table thead th {
+      padding: 10px 12px;
       text-align: left;
-      font-size: 11px;
+      font-size: 9px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
     }
-    th:last-child {
-      text-align: right;
-    }
-    td {
-      padding: 15px 12px;
-      border-bottom: 1px solid #eee;
-    }
-    td:last-child {
-      text-align: right;
-      font-weight: 600;
-    }
-    .service-name {
-      font-weight: 600;
-      color: #1a1a2e;
-    }
-    .service-desc {
-      font-size: 11px;
-      color: #666;
-      margin-top: 4px;
-    }
-    .totals {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .totals-table {
-      width: 300px;
-    }
-    .totals-table tr td {
-      padding: 8px 12px;
-      border: none;
-    }
-    .totals-table tr:last-child {
-      background: #00c4b0;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-    }
-    .totals-table tr:last-child td {
-      padding: 15px 12px;
-    }
-    .notes {
-      margin-top: 30px;
-      padding: 20px;
-      background: #fff9e6;
-      border-left: 4px solid #f5a20f;
-      border-radius: 4px;
-    }
-    .notes h4 {
-      color: #f5a20f;
-      margin-bottom: 10px;
-    }
-    .footer {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-      font-size: 10px;
-      color: #999;
+    table.services-table thead th:nth-child(2),
+    table.services-table thead th:nth-child(3),
+    table.services-table thead th:nth-child(4) {
       text-align: center;
     }
-    .validity {
-      display: inline-block;
-      padding: 8px 16px;
-      background: #e8f5f3;
+    table.services-table thead th:last-child {
+      text-align: right;
       color: #00c4b0;
-      border-radius: 20px;
+    }
+    table.services-table tbody tr {
+      border-bottom: 1px solid #e8edf3;
+    }
+    table.services-table tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    table.services-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    table.services-table tbody td {
+      padding: 12px 12px;
+      vertical-align: top;
+    }
+    .service-name {
+      font-weight: 700;
+      color: #1a1a2e;
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+    .service-desc {
+      font-size: 9.5px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .td-center {
+      text-align: center;
+      vertical-align: middle !important;
       font-weight: 600;
-      margin-top: 20px;
+      color: #444;
+    }
+    .td-amount {
+      text-align: right;
+      vertical-align: middle !important;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    .td-unit-price {
+      text-align: center;
+      vertical-align: middle !important;
+      color: #555;
+    }
+
+    /* ─── TOTAUX ─── */
+    .totals-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 24px;
+    }
+    table.totals-table {
+      width: 280px;
+      border-collapse: collapse;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    table.totals-table td {
+      padding: 9px 14px;
+      font-size: 10.5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    table.totals-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+    table.totals-table tr:last-child td {
+      border-bottom: none;
+      background: linear-gradient(135deg, #00c4b0, #009e8e);
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 12px 14px;
+    }
+    table.totals-table .tva-row td {
+      background: #f8fafc;
+      color: #666;
+      font-size: 9.5px;
+    }
+
+    /* ─── NOTES ─── */
+    .notes-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+    }
+    .notes-box h4 {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #d97706;
+      margin-bottom: 8px;
+    }
+    .notes-box p {
+      font-size: 10px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* ─── VALIDITÉ ─── */
+    .validity-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #e8f9f7;
+      border: 1px solid #b2ebf4;
+      border-radius: 30px;
+      padding: 10px 24px;
+      margin-bottom: 24px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #00a08d;
+    }
+    .validity-dot {
+      width: 8px;
+      height: 8px;
+      background: #00c4b0;
+      border-radius: 50%;
+    }
+
+    /* ─── SIGNATURE ─── */
+    .signature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .signature-box {
+      border: 1px dashed #ccc;
+      border-radius: 6px;
+      padding: 12px 16px;
+      min-height: 80px;
+    }
+    .signature-box-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .signature-box-sub {
+      font-size: 8.5px;
+      color: #aaa;
+    }
+
+    /* ─── FOOTER ─── */
+    .doc-footer {
+      border-top: 2px solid #e2e8f0;
+      padding-top: 12px;
+      font-size: 8.5px;
+      color: #999;
+      text-align: center;
+      line-height: 1.8;
+    }
+    .doc-footer strong {
+      color: #00c4b0;
+    }
+
+    /* ─── WATERMARK REF ─── */
+    .ref-badge {
+      display: inline-block;
+      background: #f0fffe;
+      border: 1px solid #b2f5ea;
+      color: #00a08d;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: monospace;
+      letter-spacing: 1px;
     }
   </style>
 </head>
 <body>
+
+  <!-- HEADER -->
   <div class="header">
-    <div class="logo">GUYA<span>FIBRE</span></div>
+    <div class="logo-area">
+      <div class="logo-text">GUYA<span>FIBRE</span></div>
+      <div class="logo-tagline">Fibre optique · Guyane française</div>
+    </div>
     <div class="company-info">
-      <p><strong>${COMPANY_INFO.name}</strong></p>
-      <p>${COMPANY_INFO.address}</p>
-      <p>${COMPANY_INFO.city}</p>
-      <p>Tél: ${COMPANY_INFO.phone}</p>
-      <p>Email: ${COMPANY_INFO.email}</p>
-      <p>SIRET: ${COMPANY_INFO.siret}</p>
+      <strong>${COMPANY_INFO.name}</strong>
+      ${COMPANY_INFO.address}<br>
+      ${COMPANY_INFO.city}<br>
+      Tél : ${COMPANY_INFO.phone}<br>
+      ${COMPANY_INFO.email}<br>
+      <span style="color:#00c4b0">${COMPANY_INFO.website}</span><br>
+      SIRET : ${COMPANY_INFO.siret}
     </div>
   </div>
 
-  <div class="quote-title">
-    <h1>DEVIS N° ${quoteData.id}</h1>
-    <div class="quote-meta">
-      <span>Date d'émission: ${formatDate(quoteData.date)}</span>
-      <span>Valide jusqu'au: ${formatDate(validUntil.toISOString().split('T')[0])}</span>
+  <!-- TITRE DOCUMENT -->
+  <div class="doc-title-bar">
+    <div>
+      <div style="font-size:10px;color:#00c4b0;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Demande de prise de contact</div>
+      <h1>N° <span class="doc-accent">${quoteData.id}</span></h1>
+    </div>
+    <div class="doc-meta">
+      <div class="date-label">Date d'émission</div>
+      <div style="font-size:11px;font-weight:600;">${formatDate(quoteData.date)}</div>
+      <div class="date-label" style="margin-top:8px;">Valide jusqu'au</div>
+      <div style="font-size:11px;font-weight:600;">${formatDate(validUntil.toISOString().split('T')[0])}</div>
     </div>
   </div>
 
-  <div class="parties">
-    <div class="party">
-      <h3>Émetteur</h3>
-      <p><strong>${COMPANY_INFO.name}</strong></p>
-      <p>${COMPANY_INFO.address}</p>
-      <p>${COMPANY_INFO.city}</p>
-      <p>Tél: ${COMPANY_INFO.phone}</p>
+  <!-- PARTIES -->
+  <div class="parties-grid">
+    <div class="party-box">
+      <div class="party-box-header">Émetteur</div>
+      <div class="party-box-body">
+        <strong>${COMPANY_INFO.name}</strong>
+        <div class="info-row"><span class="info-label">Adresse</span><span>${COMPANY_INFO.address}, ${COMPANY_INFO.city}</span></div>
+        <div class="info-row"><span class="info-label">Tél</span><span>${COMPANY_INFO.phone}</span></div>
+        <div class="info-row"><span class="info-label">Email</span><span>${COMPANY_INFO.email}</span></div>
+        <div class="info-row"><span class="info-label">SIRET</span><span>${COMPANY_INFO.siret}</span></div>
+      </div>
     </div>
-    <div class="party">
-      <h3>Destinataire</h3>
-      <p><strong>${quoteData.client.name}</strong></p>
-      ${quoteData.client.company ? `<p>${quoteData.client.company}</p>` : ''}
-      <p>${quoteData.client.address}</p>
-      <p>${quoteData.client.city}</p>
-      <p>Tél: ${quoteData.client.phone}</p>
-      <p>Email: ${quoteData.client.email}</p>
+    <div class="party-box">
+      <div class="party-box-header">Destinataire</div>
+      <div class="party-box-body">
+        <strong>${quoteData.client.name}</strong>
+        ${quoteData.client.company ? `<div class="info-row"><span class="info-label">Société</span><span>${quoteData.client.company}</span></div>` : ''}
+        <div class="info-row"><span class="info-label">Adresse</span><span>${quoteData.client.address}, ${quoteData.client.city}</span></div>
+        <div class="info-row"><span class="info-label">Tél</span><span>${quoteData.client.phone}</span></div>
+        <div class="info-row"><span class="info-label">Email</span><span>${quoteData.client.email}</span></div>
+      </div>
     </div>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 50%">Désignation</th>
-        <th style="width: 15%">Quantité</th>
-        <th style="width: 15%">Prix unitaire HT</th>
-        <th style="width: 20%">Total HT</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${quoteData.services.map(service => `
+  <!-- TABLEAU SERVICES -->
+  <div class="table-section">
+    <div class="table-section-title">Détail des prestations</div>
+    <table class="services-table">
+      <thead>
         <tr>
-          <td>
-            <div class="service-name">${service.name}</div>
-            <div class="service-desc">${service.description}</div>
-          </td>
-          <td>${service.quantity}</td>
-          <td>${formatCurrency(service.unitPrice)}</td>
-          <td>${formatCurrency(service.quantity * service.unitPrice)}</td>
+          <th style="width:48%">Désignation &amp; Description</th>
+          <th style="width:12%">Qté</th>
+          <th style="width:18%">P.U. HT</th>
+          <th style="width:22%">Total HT</th>
         </tr>
-      `).join('')}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        ${quoteData.services.map((service, index) => `
+          <tr>
+            <td>
+              <div class="service-name">${service.name}</div>
+              <div class="service-desc">${service.description}</div>
+            </td>
+            <td class="td-center">${service.quantity}</td>
+            <td class="td-unit-price">${formatCurrency(service.unitPrice)}</td>
+            <td class="td-amount">${formatCurrency(service.quantity * service.unitPrice)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
 
-  <div class="totals">
+  <!-- TOTAUX -->
+  <div class="totals-wrapper">
     <table class="totals-table">
       <tr>
         <td>Sous-total HT</td>
         <td>${formatCurrency(subtotal)}</td>
       </tr>
-      <tr>
-        <td>TVA (8,5%)</td>
+      <tr class="tva-row">
+        <td>TVA Guyane (8,5 %)</td>
         <td>${formatCurrency(tva)}</td>
       </tr>
       <tr>
@@ -302,22 +520,41 @@ export function generateQuotePDF(quoteData: QuoteData): string {
   </div>
 
   ${quoteData.notes ? `
-    <div class="notes">
-      <h4>Notes et conditions</h4>
-      <p>${quoteData.notes}</p>
-    </div>
+  <!-- NOTES -->
+  <div class="notes-box">
+    <h4>📝 Notes et conditions particulières</h4>
+    <p>${quoteData.notes}</p>
+  </div>
   ` : ''}
 
-  <div style="text-align: center;">
-    <div class="validity">
-      Ce devis est valable ${quoteData.validityDays} jours
+  <!-- VALIDITÉ -->
+  <div style="text-align:center;margin-bottom:24px;">
+    <div class="validity-bar">
+      <div class="validity-dot"></div>
+      Ce devis est valable <strong style="margin:0 4px;">${quoteData.validityDays} jours</strong> à compter du ${formatDate(quoteData.date)}
+      <div class="validity-dot"></div>
     </div>
   </div>
 
-  <div class="footer">
-    <p>${COMPANY_INFO.name} - ${COMPANY_INFO.address}, ${COMPANY_INFO.city}</p>
-    <p>SIRET: ${COMPANY_INFO.siret} | Tél: ${COMPANY_INFO.phone} | Email: ${COMPANY_INFO.email} | ${COMPANY_INFO.website}</p>
+  <!-- SIGNATURES -->
+  <div class="signature-grid">
+    <div class="signature-box">
+      <div class="signature-box-label">Bon pour accord — Client</div>
+      <div class="signature-box-sub">Date et signature précédées de la mention<br>"Bon pour accord"</div>
+    </div>
+    <div class="signature-box">
+      <div class="signature-box-label">Émis par — GUYA FIBRE</div>
+      <div class="signature-box-sub">Référence : <span style="font-family:monospace;color:#00a08d;">${quoteData.id}</span></div>
+    </div>
   </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <strong>${COMPANY_INFO.name}</strong> — ${COMPANY_INFO.address}, ${COMPANY_INFO.city}<br>
+    SIRET : ${COMPANY_INFO.siret} &nbsp;|&nbsp; Tél : ${COMPANY_INFO.phone} &nbsp;|&nbsp; ${COMPANY_INFO.email} &nbsp;|&nbsp; <span style="color:#00c4b0">${COMPANY_INFO.website}</span><br>
+    Document généré le ${formatDate(new Date().toISOString().split('T')[0])} — Confidentiel
+  </div>
+
 </body>
 </html>
   `
@@ -341,27 +578,24 @@ function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-// Function to trigger PDF download in browser
+// Déclenche le téléchargement PDF via la fenêtre d'impression
 export async function downloadQuotePDF(quoteData: QuoteData): Promise<void> {
   const html = generateQuotePDF(quoteData)
   
-  // Create a new window with the HTML content for printing
   const printWindow = window.open('', '_blank')
   if (printWindow) {
     printWindow.document.write(html)
     printWindow.document.close()
     printWindow.focus()
     
-    // Wait for content to load then trigger print
     setTimeout(() => {
       printWindow.print()
-    }, 500)
+    }, 600)
   }
 }
 
-// Example usage:
 export const exampleQuote: QuoteData = {
-  id: "DEV-2024-001",
+  id: "GF-2026-001",
   client: {
     name: "Jean-Pierre Moreau",
     email: "jp.moreau@sfg.gf",

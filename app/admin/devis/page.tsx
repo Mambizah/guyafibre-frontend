@@ -59,10 +59,7 @@ import devisApi, { Devis } from "@/lib/api/devis.api"
 import { toast } from "sonner"
 
 interface DevisWithDetails extends Devis {
-  services?: string[]
-  address?: string
-  description?: string
-  urgency?: string
+  // Additional fields specific to detail view
 }
 
 const statusConfig: Record<string, { label: string; icon: typeof Clock; color: string; textColor: string }> = {
@@ -126,7 +123,7 @@ export default function AdminDevisPage() {
   const handleStatusChange = async (devisId: string, newStatus: string) => {
     try {
       await devisApi.updateStatus(devisId, { status: newStatus })
-      setDevis(devis.map(d => d.id === devisId ? { ...d, status: newStatus } : d))
+      setDevis(devis.map(d => d.id === devisId ? { ...d, status: newStatus as Devis['status'] } : d))
       toast.success("Statut mis à jour")
     } catch (error) {
       toast.error("Erreur lors de la mise à jour du statut")
@@ -153,10 +150,10 @@ export default function AdminDevisPage() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-foreground md:text-3xl">
-            Demandes de devis
+            Prises de contact
           </h1>
           <p className="text-muted-foreground">
-            Gérez toutes les demandes de devis reçues
+            Gérez toutes les prises de contact reçues
           </p>
         </div>
         <div className="flex gap-2">
@@ -176,9 +173,9 @@ export default function AdminDevisPage() {
       <div className="grid gap-4 md:grid-cols-4">
         {[
           { label: "Total", value: devis.length, color: "bg-primary" },
-          { label: "Nouveaux", value: devis.filter(q => q.status === "new").length, color: "bg-blue-500" },
-          { label: "En cours", value: devis.filter(q => q.status === "in-progress" || q.status === "pending").length, color: "bg-violet-500" },
-          { label: "Terminés", value: devis.filter(q => q.status === "completed" || q.status === "accepted").length, color: "bg-emerald-500" },
+          { label: "Nouveaux", value: devis.filter(q => q.status === "NEW").length, color: "bg-blue-500" },
+          { label: "En cours", value: devis.filter(q => q.status === "IN_PROGRESS" || q.status === "PENDING").length, color: "bg-violet-500" },
+          { label: "Terminés", value: devis.filter(q => q.status === "QUOTE_SENT" || q.status === "ACCEPTED").length, color: "bg-emerald-500" },
         ].map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-4">
@@ -256,14 +253,14 @@ export default function AdminDevisPage() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>{quote.service}</TableCell>
+                    <TableCell>{quote.services?.[0] || '-'}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <MapPin className="h-3 w-3 text-muted-foreground" />
                         {quote.location}
                       </div>
                     </TableCell>
-                    <TableCell className="font-semibold">{formatAmount(quote.estimatedAmount)}</TableCell>
+                    <TableCell className="font-semibold">{quote.amount ? formatAmount(parseFloat(quote.amount)) : '-'}</TableCell>
                     <TableCell>
                       <Badge variant="secondary" className={`${status.textColor}`}>
                         <status.icon className="mr-1 h-3 w-3" />
@@ -315,7 +312,7 @@ export default function AdminDevisPage() {
               <DialogHeader>
                 <div className="flex items-center justify-between">
                   <DialogTitle className="font-display text-xl">
-                    Devis {selectedQuote.reference}
+                    Prise de contact {selectedQuote.reference}
                   </DialogTitle>
                   <Badge variant="secondary" className={statusConfig[selectedQuote.status as keyof typeof statusConfig]?.textColor || "text-muted-foreground"}>
                     {statusConfig[selectedQuote.status as keyof typeof statusConfig]?.label || selectedQuote.status}
@@ -383,7 +380,7 @@ export default function AdminDevisPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline">{selectedQuote.service}</Badge>
+                      <Badge variant="outline">{selectedQuote.services?.[0] || '-'}</Badge>
                     </div>
                   </CardContent>
                 </Card>
@@ -402,7 +399,7 @@ export default function AdminDevisPage() {
                 {/* Amount */}
                 <div className="flex items-center justify-between rounded-lg bg-muted p-4">
                   <span className="font-medium">Montant estimé</span>
-                  <span className="text-2xl font-bold text-primary">{formatAmount(selectedQuote.estimatedAmount)}</span>
+                  <span className="text-2xl font-bold text-primary">{selectedQuote.amount ? formatAmount(parseFloat(selectedQuote.amount)) : '-'}</span>
                 </div>
 
                 {/* Status Change */}
