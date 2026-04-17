@@ -108,8 +108,9 @@ export default function AdminDevisPage() {
   useEffect(() => {
     const fetchDevis = async () => {
       try {
-        const data = await devisApi.findAll()
-        setDevis(Array.isArray(data) ? data : [])
+        const response = await devisApi.findAll()
+        // Backend returns { data: [...], meta: {...} }
+        setDevis(response?.data || [])
       } catch (error) {
         console.error("Failed to fetch devis:", error)
         toast.error("Erreur lors du chargement des devis")
