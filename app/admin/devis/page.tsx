@@ -109,10 +109,11 @@ export default function AdminDevisPage() {
     const fetchDevis = async () => {
       try {
         const data = await devisApi.findAll()
-        setDevis(data)
+        setDevis(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error("Failed to fetch devis:", error)
         toast.error("Erreur lors du chargement des devis")
+        setDevis([])
       } finally {
         setIsLoading(false)
       }
